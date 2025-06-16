@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airways Ticket Booking</title>
+    <style>
+        /* Body and Background */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: url('airways.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+
+        /* Form Styling */
+        form {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 153, 0.7);
+            animation: glowing-border 2s infinite;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00ff99;
+            text-shadow: 0 0 10px #00ff99, 0 0 20px #00ff99;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input, select {
+            background: rgba(255, 255, 255, 0.8);
+            color: #000;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: linear-gradient(135deg, #00ff99, #006600);
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #006600, #00ff99);
+            transform: scale(1.05);
+        }
+
+        .error {
+            font-size: 12px;
+            color: red;
+        }
+
+        /* Glowing Border Animation */
+        @keyframes glowing-border {
+            0% {
+                box-shadow: 0 0 5px #00ff99, 0 0 10px #00ff99;
+            }
+            50% {
+                box-shadow: 0 0 20px #00ff66, 0 0 40px #00ff66;
+            }
+            100% {
+                box-shadow: 0 0 5px #00ff99, 0 0 10px #00ff99;
+            }
+        }
+
+        /* Select Arrow Style */
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"%3E%3Cpath d="M8 10L12 14L16 10H8Z" fill="%23000000"/%3E%3C/svg%3E');
+            background-position: right 10px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <form id="ticketForm" method="POST" action="airways.php">
+        <h1>Airways Ticket Booking</h1>
+        
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="mobile">Mobile:</label>
+        <input type="text" id="mobile" name="mobile" required onblur="validateMobile()">
+        <div id="mobileError" class="error"></div>
+
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" required onblur="validateEmail()">
+        <div id="emailError" class="error"></div>
+
+        <label for="source">Source:</label>
+        <select id="source" name="source" required onchange="updateDestination()">
+            <option value="" selected>Select City</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Bangalore">Bangalore</option>
+            <option value="Jaipur">Jaipur</option>
+            <option value="Ahmedabad">Ahmedabad</option>
+            <option value="Hyderabad">Hyderabad</option>
+            <option value="Chennai">Chennai</option>
+            <option value="Kolkata">Kolkata</option>
+            <option value="Pune">Pune</option>
+            <option value="Lucknow">Lucknow</option>
+        </select>
+
+        <label for="destination">Destination:</label>
+        <select id="destination" name="destination" required>
+            <option value="" selected>Select City</option>
+        </select>
+
+        <button type="submit">Show Ticket</button>
+    </form>
+
+    <script>
+        const cities = [
+            "Delhi", "Mumbai", "Bangalore", "Jaipur", "Ahmedabad", 
+            "Hyderabad", "Chennai", "Kolkata", "Pune", "Lucknow"
+        ];
+
+        function updateDestination() {
+            const source = document.getElementById("source").value;
+            const destinationSelect = document.getElementById("destination");
+
+            destinationSelect.innerHTML = '<option value="" selected>Select City</option>';
+
+            cities.forEach(city => {
+                if (city !== source) {
+                    const option = document.createElement("option");
+                    option.value = city;
+                    option.textContent = city;
+                    destinationSelect.appendChild(option);
+                }
+            });
+        }
+
+        function validateMobile() {
+            var mobile = document.getElementById("mobile").value;
+            var mobileError = document.getElementById("mobileError");
+            var mobilePattern = /^\d{10}$/;
+
+            if (!mobile.match(mobilePattern)) {
+                mobileError.textContent = "Please enter a valid 10-digit mobile number.";
+                return false;
+            } else {
+                mobileError.textContent = "";
+                return true;
+            }
+        }
+
+        function validateEmail() {
+            var email = document.getElementById("email").value;
+            var emailError = document.getElementById("emailError");
+            var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+            if (!email.match(emailPattern)) {
+                emailError.textContent = "Please enter a valid email address.";
+                return false;
+            } else {
+                emailError.textContent = ""; 
+                return true;
+            }
+        }
+
+        document.getElementById("ticketForm").onsubmit = function(event) {
+            var isMobileValid = validateMobile();
+            var isEmailValid = validateEmail();
+
+            if (!isMobileValid || !isEmailValid) {
+                event.preventDefault();
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</body>
+</html>
